@@ -1,104 +1,188 @@
 #! /bin/bash/ -x
-
+shopt -s extglob
 echo "Welcome to Address book code"
 flag=0
 
 #OPEN ADDRESS BOOK FUNCTION
+
 function openAddressBook()
 {
-	echo "Enter Address Book Name"
-	read AddressBookName
-	cat "$AddressBookName.txt"
-	echo -e "choose from options given"
-	echo -e "1.\tadd an entry"
-	echo -e "2.\tdelete an entry"
-	echo -e "3.\tsearch an entry"
-	echo -e "4.\tupdate an entry"
-	read option3
-	case $option3 in
-	1 )
-	addEntry
-	;;
-	2 )
-	deleteEntry
-	;;
-	3 )
-	searchEntry
-	;;
-	4 )
-	updateEntry
-	;;
-	* )
-	echo "Invalid choice!!"
-	;;
-	esac
+end=0
+	while [ $end == 0 ]
+	do
+		echo "Enter Address Book Name"
+		read AddressBookName
+		cat "$AddressBookName.txt"
+		echo -e "choose from options given"
+		echo -e "1.\tadd an entry"
+		echo -e "2.\tdelete an entry"
+		echo -e "3.\tsearch an entry"
+		echo -e "4.\tupdate an entry"
+		echo -e "5.\tEXIT"
+		read option3
+		case $option3 in
+			1 )
+				addEntry
+			;;
+			2 )
+				deleteEntry
+			;;
+			3 )
+				searchEntry
+			;;
+			4 )
+				updateEntry
+			;;
+			5 )
+				end=1
+			* )
+				echo "Invalid choice!!"
+			;;
+		esac
+	done
 }
 
-#CREATE ADDRESS BOOK CODE
+#CREATE ADDRESS BOOK
+
 function createAddressBook()
 {
-	read -p "Enter Address Book Name" AddressBookName
-	if [ -f "$AddressBookName.txt" ]
-		then
-	echo	"file already exists"
-	else
-	touch "$AddressBookName.txt"
-	echo "AddressBook $AddressBookName created!!"
-	fi
+	end=0
+	while [ $end == 0 ]
+	do
+		read -p "Enter Address Book Name" AddressBookName
+		if [ -f "$AddressBookName.txt" ]
+			then
+				echo	"file already exists"
+		else
+			touch "$AddressBookName.txt"
+			echo "AddressBook $AddressBookName created!!"
+		fi
+	done
 }
 
 #DELETE ADDRESS BOOK CODE
+
 function deleteAddressBook(){
-flag1=0
-while [ $flag1 == 0 ]
-do
-read -p "enter address book name" AddressBookName
-if [ -f "$AddressBookName.txt" ]
-then
-rm "$AddressBookName.txt"
-echo "$AddressBookName deleted"
-else
-	echo "file doesn't exists input valid name"
-fi
-read -p "wanna exit this window 1.yes 2.no" option1
-if [ $option1 == 1 ]
-then
-flag1=1
-fi
-done
+	flag1=0
+	while [ $flag1 == 0 ]
+	do
+		read -p "enter address book name" AddressBookName
+		if [ -f "$AddressBookName.txt" ]
+		then
+			rm "$AddressBookName.txt"
+			echo "$AddressBookName deleted"
+		else
+			echo "file doesn't exists input valid name"
+		fi
+		read -p "wanna exit this window 1.yes 2.no" option1
+
+		if [ $option1 == 1 ]
+		then
+			flag1=1
+		fi
+	done
 }
 
 #DELETE ALL ADDRESS BOOK CODE
 
 function deleteAllAddressBooks(){
 
-for file in `ls *.txt`
-do
-rm $file
-done
+	for file in `ls *.txt`
+	do
+		rm $file
+	done
 }
 
 
 #ADD An Entry in address book
 
-
 function addEntry(){
-	fileName="$AddressBookName.txt"
-   read -p "Enter Phone Number" phoneNumber
-	alreadyExists=`cat $fileName | grep $phoneNumber | wc -c`
+fileName="$AddressBookName.txt"
+patFnameLname="^[A-Z]{1}[a-z]{2,}$"
+patEmail="^[a-zA-Z][a-zA-Z0-9_\-+]*[.]{0,1}[a-zA-Z0-9_\-+]{1,}[@][a-zA-Z0-9]{1,}[.][a-zA-Z]{2,}[.]{0,}[a-zA-Z]*$"
+patMobileNumber="^[+]{1}[0-9]{2}[ ][0-9]{10}"
+patAddress="^[a-zA-Z0-9_\@-+&/]{10,200}$"
+patCity="^[a-zA-Z]{3,50}$"
+patState="^[a-zA-Z]{3,50}"
+patZip="^[1-9]{1}[0-9]{2}[ ]{0,1}[0-9]{3}$"
+loop1=0
+loop2=0
+loop3=0
+loop4=0
+loop5=0
+loop6=0
+loop7=0
+while [ $loop1 == 0  ]
+do
+	read -p "Enter Phone Number" phoneNumber
+	if [[ $phoneNumber =~ $patMobileNumber ]]
+	then
+		loop1=1
+	fi
+done
+	searchNumber=`echo $phoneNumber | awk '{print $2}'`
+	alreadyExists=`cat $fileName | grep $searchNumber | wc -c`
+
 	if [ $alreadyExists -gt 0 ]
 	then
-	echo "entry already exists"
+		echo "entry already exists"
 	else
-	read -p "Enter First name" fName
-   read -p "Enter Last name" lName
-   read -p "Enter Address" Address
-   read -p "Enter city" city
-   read -p "Enter State" state
-   read -p "Enter zip" zip
-   echo -e "$fName\t $lName\t $Address\t $city\t $state\t $zip\t $phoneNumber\t" >> $fileName
-   cat $fileName
-   fi
+		while [ $loop2 == 0 ]
+		do
+			read -p "Enter First name" fName
+			if [[ $fName =~ $patFnameLname ]]
+    		then
+    			loop2=1
+    		fi
+		done
+
+		while [ $loop3 == 0 ]
+		do
+ 			read -p "Enter Last name" lName
+			if [[ $lName =~ $patFnameLname ]]
+    		then
+    			loop3=1
+    		fi
+		done
+
+		while [ $loop4 == 0 ]
+		do
+   		read -p "Enter Address" Address
+			if [[ $Address =~ $patAddress ]]
+    		then
+    			loop4=1
+    		fi
+		done
+
+   	while [ $loop5 == 0 ]
+		do
+ 			read -p "Enter city" city
+			if [[ $city =~ $patCity ]]
+    		then
+    			loop5=1
+    		fi
+		done
+
+		while [ $loop6 == 0 ]
+		do
+			read -p "Enter State" state
+			if [[ $state =~ $patState ]]
+    		then
+    			loop6=1
+    		fi
+		done
+
+		while [ $loop7 == 0 ]
+		do
+   		read -p "Enter zip" zip
+			if [[ $zip =~ $patZip ]]
+   		 then
+    			loop7=1
+			fi
+		done
+		echo -e "$fName\t $lName\t $Address\t $city\t $state\t $zip\t $phoneNumber\t" >> $fileName
+   	cat $fileName
+	fi
 }
 
 #DELETE AN ENTRY
@@ -180,17 +264,7 @@ read -p "Enter First name" fName
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
+#Works like Main Menu
 while [ $flag == 0 ]
 do
 AddressBookNumbering=0
