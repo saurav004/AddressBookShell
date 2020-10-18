@@ -9,6 +9,29 @@ function openAddressBook()
 	echo "Enter Address Book Name"
 	read AddressBookName
 	cat "$AddressBookName.txt"
+	echo -e "choose from options given"
+	echo -e "1.\tadd an entry"
+	echo -e "2.\tdelete an entry"
+	echo -e "3.\tsearch an entry"
+	echo -e "4.\tupdate an entry"
+	read option3
+	case $option3 in
+	1 )
+	addEntry
+	;;
+	2 )
+	deleteEntry
+	;;
+	3 )
+	searchEntry
+	;;
+	4 )
+	updateEntry
+	;;
+	* )
+	echo "Invalid choice!!"
+	;;
+	esac
 }
 
 #CREATE ADDRESS BOOK CODE
@@ -20,17 +43,7 @@ function createAddressBook()
 	echo	"file already exists"
 	else
 	touch "$AddressBookName.txt"
-	fileName="$AddressBookName.txt"
-	echo -e "Fname\t Lname\t Address\t city\t state\t zip\t Phone_Number\t" >> $fileName
-	read -p "Enter First name" fName
-	read -p "Enter Last name" lName
-	read -p "Enter Address" Address
-	read -p "Enter city" city
-	read -p "Enter State" state
-	read -p "Enter zip" zip
-	read -p "Enter Phone Number" phoneNumber
-	echo -e "$fName\t $lName\t $Address\t $city\t $state\t $zip\t $phoneNumber\t" >> $fileName
-	cat "$AddressBookName.txt"
+	echo "AddressBook $AddressBookName created!!"
 	fi
 }
 
@@ -64,6 +77,119 @@ do
 rm $file
 done
 }
+
+
+#ADD An Entry in address book
+
+
+function addEntry(){
+	fileName="$AddressBookName.txt"
+   read -p "Enter Phone Number" phoneNumber
+	alreadyExists=`cat $fileName | grep $phoneNumber | wc -c`
+	if [ $alreadyExists -gt 0 ]
+	then
+	echo "entry already exists"
+	else
+	read -p "Enter First name" fName
+   read -p "Enter Last name" lName
+   read -p "Enter Address" Address
+   read -p "Enter city" city
+   read -p "Enter State" state
+   read -p "Enter zip" zip
+   echo -e "$fName\t $lName\t $Address\t $city\t $state\t $zip\t $phoneNumber\t" >> $fileName
+   cat $fileName
+   fi
+}
+
+#DELETE AN ENTRY
+
+function deleteEntry(){
+
+fileName="$AddressBookName.txt"
+read -p "Enter your phone Number" phoneNumber
+alreadyExists=`cat $fileName | grep $phoneNumber | wc -c`
+    if [ $alreadyExists > 0 ]
+	 then
+		cat $fileName | grep -v $phoneNumber > $fileName
+		echo "entry deleted"
+		cat $fileName
+	fi
+}
+
+#SEARCH AN ENTRY
+
+function searchEntry(){
+read -p "Enter phone Number" phoneNumber
+ifExists=`cat "$AddressBookName.txt" | grep $phoneNumber | wc -c`
+if [ $ifExists -gt 0 ]
+	then cat "$AddressBookName.txt" | grep $phoneNumber
+	else 
+	echo "Entry doesn't exists"
+fi
+}
+
+#update an Entry
+
+function updateEntry(){
+read -p "Enter phone number of the entry you want to update" phoneNumber
+#echo "what do want to update"
+#echo "choose from below"
+#echo "1.First Name"
+#echo "2.Last Name"
+#echo "3.Address"
+#echo "4.city"
+#echo "5.state"
+#echo "6.zip"
+#read option4
+
+fileName="$AddressBookName.txt"
+#case $option4 in
+#1 )
+#read -p "Enter new first name" fName
+#echo "$fName"
+#fName=`cat "$fileName" | grep "$phoneNumber" | awk '{ $1 = $fName; print }'`
+#;;
+#2 )
+#read -p "Enter new Last name" lName
+#;;
+#3 )
+#read -p "Enter new Address" Address
+#;;
+#4 )
+#read -p "Enter new city name" city
+#;;
+#5 )
+#read -p "Enter new state name" state
+#;;
+#6 )
+#read -p "Enter new zip" zip
+#;;
+#* )
+#echo "Invalid choice!!"
+#;;
+#esac
+cat $fileName | grep -v $phoneNumber > $fileName
+read -p "Enter First name" fName
+   read -p "Enter Last name" lName
+   read -p "Enter Address" Address
+   read -p "Enter city" city
+   read -p "Enter State" state
+   read -p "Enter zip" zip
+	echo -e "$fName\t $lName\t $Address\t $city\t $state\t $zip\t $phoneNumber\t" >> $fileName
+   cat $fileName
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 while [ $flag == 0 ]
 do
