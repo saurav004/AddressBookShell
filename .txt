@@ -1,7 +1,0 @@
-Fname Lname Address city state zip Phone_Number
-Fname Lname Address city state zip Phone_Number
-Fname Lname Address city state zip Phone_Number
-Kumar Saurav Chandmari road Patna Bihar 800020 9284543205
-Fname Lname Address city state zip Phone_Number
-Kumar Saurav kankarbagh patna bihar 800020 9284543205
-Fname Lname Address city state zip Phone_Number
